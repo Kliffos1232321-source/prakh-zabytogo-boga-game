@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Прах забытого бога",
+  "short_name": "Прах",
+  "description": "Мрачная фэнтези action-RPG",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "landscape",
+  "background_color": "#0b0e14",
+  "theme_color": "#0b0e14",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
