@@ -36,19 +36,74 @@
 #rotateHint{display:none;position:fixed;inset:0;z-index:30;background:#090b10;color:#e8d5b0;align-items:center;justify-content:center;text-align:center;padding:30px;font:18px Georgia,serif}
 @media(orientation:portrait) and (max-width:700px){#rotateHint{display:flex}}
 @media(orientation:landscape){.hud{padding:10px 14px}.joy{width:140px;height:140px}.stick{width:48px;height:48px;margin:-24px}.action{width:62px;height:62px}.action.attack{width:76px;height:76px}.actions{grid-template-columns:repeat(2,66px);gap:8px}.bottom{padding:0 46px max(18px,env(safe-area-inset-bottom))}}
+
+/* HUD redesign + iOS viewport stabilization */
+:root{--app-vw:100vw;--app-vh:100dvh;--app-vtop:0px;--app-vleft:0px}
+html,body{position:fixed;inset:0;width:100%;height:100%;height:var(--app-vh);overflow:hidden}
+#game,.hud,#start,#modal,#creator,#ending{position:fixed;left:var(--app-vleft);top:var(--app-vtop);width:var(--app-vw);height:var(--app-vh);inset:auto}
+#game{display:block;max-width:none;max-height:none;touch-action:none}
+.hud{padding:calc(env(safe-area-inset-top) + 10px) 14px calc(env(safe-area-inset-bottom) + 12px);pointer-events:none}
+.top{align-items:flex-start}
+.playerPanel{display:flex;align-items:center;gap:10px;max-width:min(58vw,390px);padding:8px 12px 8px 8px;background:var(--panel);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(8px);box-shadow:0 8px 30px #0005}
+.avatarMark{width:48px;height:48px;flex:0 0 48px;border:1px solid #d9e6f3aa;border-radius:50%;display:grid;place-items:center;color:#f4dfb7;font-weight:850;font-size:12px;background:radial-gradient(circle at 35% 25%,#657080,#222a36 72%)}
+.playerInfo{min-width:0}.playerInfo .brand{font-size:9px;letter-spacing:.1em}.playerInfo .name{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars{width:clamp(130px,30vw,260px);margin-top:5px;gap:4px}.barline{font-size:10px;gap:5px}.bar{height:6px}.mana{background:linear-gradient(90deg,#6553ad,#b49bfa)}
+.stats{display:none}
+.topbtn{top:12px;right:calc(min(184px,22vw) + 25px);padding:8px 9px;font-size:10px;min-height:34px;border-radius:9px;z-index:3}
+.topbtn.second{top:12px;right:calc(min(184px,22vw) + 98px)}
+#quest{top:auto;bottom:calc(env(safe-area-inset-bottom) + 112px);left:50%;transform:translateX(-50%);max-width:min(54vw,330px);padding:7px 10px;font-size:10px;opacity:.92}
+#quest strong{font-size:11px}
+.bottom{padding:0 28px max(16px,env(safe-area-inset-bottom));}
+.controls{align-items:flex-end}
+.joy{width:clamp(112px,17vh,154px);height:clamp(112px,17vh,154px);flex:0 0 auto}
+.stick{width:46px;height:46px;margin:-23px}
+.actions{grid-template-columns:repeat(2,58px);gap:8px;align-items:center}
+.action{width:58px;height:58px;font-size:10px;touch-action:none;-webkit-user-select:none;user-select:none}
+.action.attack{width:72px;height:72px;font-size:12px}
+.action.skill{font-size:17px}
+button,.joy,.action,.topbtn{ -webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;-webkit-user-drag:none;touch-action:none}
+@media(orientation:landscape){
+ .hud{padding:calc(env(safe-area-inset-top) + 8px) 12px calc(env(safe-area-inset-bottom) + 10px)}
+ .playerPanel{max-width:42vw}
+ .bars{width:clamp(150px,26vw,270px)}
+ .bottom{padding:0 30px max(12px,env(safe-area-inset-bottom))}
+ .joy{width:clamp(108px,21vh,150px);height:clamp(108px,21vh,150px)}
+ .actions{grid-template-columns:repeat(2,58px)}
+ .action{width:58px;height:58px}.action.attack{width:72px;height:72px}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .playerPanel{padding:6px 9px 6px 6px;gap:7px}.avatarMark{width:40px;height:40px;flex-basis:40px}
+ .playerInfo .brand{display:none}.playerInfo .name{font-size:12px}.bars{margin-top:2px;gap:3px;width:clamp(130px,28vw,220px)}
+ .topbtn{right:calc(min(150px,22vw) + 22px);top:8px}.topbtn.second{right:calc(min(150px,22vw) + 88px);top:8px}
+}
+@media(max-width:430px) and (orientation:portrait){
+ .playerPanel{max-width:64vw}.avatarMark{width:40px;height:40px;flex-basis:40px}.bars{width:clamp(125px,38vw,180px)}
+ .bottom{padding-left:14px;padding-right:14px}.joy{width:112px;height:112px}
+ .actions{grid-template-columns:repeat(2,52px);gap:6px}.action{width:52px;height:52px}.action.attack{width:64px;height:64px}
+}
+
 </style>
 </head>
 <body>
 <canvas id="game"></canvas>
 <div class="hud">
  <div class="top">
-  <div class="panel"><div class="brand">Прах забытого бога · 0.2</div><div class="name"><span id="playerName">Безымянный</span> <span id="level">ур. 1</span></div><div class="bars"><div class="barline">HP <div class="bar"><div id="hpFill" class="fill hp"></div></div><span id="hpText">100/100</span></div><div class="barline">XP <div class="bar"><div id="xpFill" class="fill xp"></div></div><span id="xpText">0/50</span></div></div></div>
+  <div class="playerPanel">
+   <div class="avatarMark" id="avatarMark">АВ</div>
+   <div class="playerInfo"><div class="brand">Прах забытого бога</div><div class="name"><span id="playerName">Безымянный</span> <span id="level">ур. 1</span></div>
+    <div class="bars">
+     <div class="barline"><span>HP</span><div class="bar"><div id="hpFill" class="fill hp"></div></div><span id="hpText">100/100</span></div>
+     <div class="barline"><span>XP</span><div class="bar"><div id="xpFill" class="fill xp"></div></div><span id="xpText">0/50</span></div>
+     <div class="barline manaLine"><span>✦</span><div class="bar"><div class="fill mana" style="width:100%"></div></div><span>100</span></div>
+    </div>
+   </div>
+  </div>
   <div class="panel stats"><div>⚔ <b id="damageText">15</b> урон</div><div>✦ <b id="shardText">0</b> осколков</div><div>☠ <b id="killText">0</b> повержено</div></div>
  </div>
- <div class="bottom"><div class="hint">Джойстик — движение<br>УДАР · РЫВОК · УМЕНИЕ</div><div class="controls"><div id="joy" class="joy"><div id="stick" class="stick"></div></div><div class="actions"><button id="dodge" class="action dodge">РЫВОК</button><button id="skill" class="action skill">ВЗРЫВ</button><button id="interact" class="action">ДЕЙСТВИЕ</button><button id="attack" class="action attack">УДАР</button></div></div></div>
+ <div class="bottom"><div class="hint">Джойстик — движение<br>УДАР · РЫВОК · УМЕНИЕ</div><div class="controls"><div id="joy" class="joy"><div id="stick" class="stick"></div></div><div class="actions"><button id="attack" class="action attack">УД</button><button id="dodge" class="action dodge">Р</button><button id="interact" class="action">ДЕ</button><button id="skill" class="action skill">✦</button></div></div></div>
 </div>
 <div id="quest"><strong>Глава I · Пепельный зов</strong><span id="questText">Найди три древних печати (0/3).</span></div>
-<button id="inventoryBtn" class="topbtn">☰ Сумка</button><button id="skillsBtn" class="topbtn second">✦ Навыки</button>
+<button id="skillsBtn" class="topbtn">НАВЫКИ</button><button id="inventoryBtn" class="topbtn second">СУМКА</button>
 <div id="message"></div><div id="modal"><div class="sheet" id="sheet"></div></div>
 <div id="rotateHint">⟳<br><br>«Прах забытого бога» лучше играть горизонтально.<br>Поверни устройство.</div>
 <div id="creator"><div class="creatorbox"><div class="brand">Создание персонажа · глава I</div><h1>Кем ты станешь?</h1><p class="storytext">В этом мире имя — первая вещь, которую у тебя могут отнять. Остальное ты выберешь сам.</p>
@@ -65,7 +120,9 @@
 'use strict';
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d');
 let W=0,H=0,dpr=Math.min(devicePixelRatio||1,2);
-function resize(){const rect=canvas.getBoundingClientRect();W=Math.max(1,Math.round(rect.width));H=Math.max(1,Math.round(rect.height));dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(typeof draw==='function')draw()}addEventListener('resize',resize);if(window.visualViewport)visualViewport.addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,150));resize();
+function syncViewport(){const vv=window.visualViewport;const w=vv?vv.width:window.innerWidth;const h=vv?vv.height:window.innerHeight;const left=vv?vv.offsetLeft:0;const top=vv?vv.offsetTop:0;document.documentElement.style.setProperty('--app-vw',Math.max(1,w)+'px');document.documentElement.style.setProperty('--app-vh',Math.max(1,h)+'px');document.documentElement.style.setProperty('--app-vleft',left+'px');document.documentElement.style.setProperty('--app-vtop',top+'px');}
+function resize(){syncViewport();const rect=canvas.getBoundingClientRect();W=Math.max(1,Math.round(rect.width));H=Math.max(1,Math.round(rect.height));dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(typeof draw==='function')draw()}
+addEventListener('resize',resize,{passive:true});if(window.visualViewport){visualViewport.addEventListener('resize',resize,{passive:true});visualViewport.addEventListener('scroll',resize,{passive:true})}addEventListener('orientationchange',()=>{setTimeout(resize,80);setTimeout(resize,350);setTimeout(resize,800)});document.addEventListener('visibilitychange',()=>{if(!document.hidden){setTimeout(resize,80);setTimeout(resize,300)}});window.addEventListener('pageshow',()=>{setTimeout(resize,80);setTimeout(resize,300)});resize();
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),rand=(a,b)=>a+Math.random()*(b-a);
 const world={w:2200,h:1900};let cam={x:0,y:0},running=false,last=0,elapsed=0,shake=0,attackCd=0,dodgeCd=0,skillCd=0,flash=0,enemyId=0,storyStep=0,modalOpen=false,activeTab='all';
 const freshPlayer=()=>({name:'Безымянный',class:'warrior',look:'ashen',origin:'exile',x:310,y:320,r:13,hp:110,maxHp:110,level:1,xp:0,next:55,damage:15,speed:178,shards:0,kills:0,iframes:0,dirX:1,dirY:0,skillPower:32,crit:.06,stats:{vitality:0,force:0,agility:0,arcane:0},skills:{cleave:0,ember:0,agility:0,leech:0},equip:{weapon:0,armor:0,relic:0},inventory:[],potions:2});
@@ -160,10 +217,10 @@ function draw(){ctx.clearRect(0,0,W,H);let scale=Math.max(.68,Math.min(W/720,H/6
  for(let p of particles){ctx.globalAlpha=clamp(p.life/p.max,0,1);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1;for(let f of floaters){ctx.globalAlpha=clamp(f.life,0,1);ctx.fillStyle=f.color;ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText(f.text,f.x,f.y)}ctx.globalAlpha=1;
  ctx.restore();
  // map
- const mw=78,mh=78,mx=W-mw-10,my=H*.5-39;ctx.fillStyle='#0c1119c9';ctx.fillRect(mx,my,mw,mh);ctx.strokeStyle='#ffffff30';ctx.strokeRect(mx,my,mw,mh);ctx.fillStyle='#d5dce3';ctx.beginPath();ctx.arc(mx+player.x/world.w*mw,my+player.y/world.h*mh,3,0,Math.PI*2);ctx.fill();for(let s of shrines)if(!s.got){ctx.fillStyle='#e8c17a';ctx.fillRect(mx+s.x/world.w*mw-1,my+s.y/world.h*mh-1,3,3)}for(let e of enemies){if(e.hp<=0)continue;ctx.fillStyle=e.type==='boss'?'#dc82ff':'#db686b';ctx.fillRect(mx+e.x/world.w*mw-1,my+e.y/world.h*mh-1,2,2)}
+ const mw=Math.min(184,Math.max(112,W*.22)),mh=Math.min(118,Math.max(76,H*.24)),mx=W-mw-14,my=58;ctx.fillStyle='#0c1119e8';ctx.fillRect(mx,my,mw,mh);ctx.strokeStyle='#ffffff55';ctx.lineWidth=1.5;ctx.strokeRect(mx,my,mw,mh);ctx.fillStyle='#d5dce3';ctx.beginPath();ctx.arc(mx+player.x/world.w*mw,my+player.y/world.h*mh,3,0,Math.PI*2);ctx.fill();for(let s of shrines)if(!s.got){ctx.fillStyle='#e8c17a';ctx.fillRect(mx+s.x/world.w*mw-1,my+s.y/world.h*mh-1,3,3)}for(let e of enemies){if(e.hp<=0)continue;ctx.fillStyle=e.type==='boss'?'#dc82ff':'#db686b';ctx.fillRect(mx+e.x/world.w*mw-1,my+e.y/world.h*mh-1,2,2)}
 }
 function loop(t){if(!running)return;let dt=Math.min((t-last)/1000,.04)||0;last=t;update(dt);draw();requestAnimationFrame(loop)}
-document.addEventListener('selectstart',e=>e.preventDefault(),{capture:true});document.addEventListener('contextmenu',e=>e.preventDefault(),{capture:true});const joy=$('joy'),stick=$('stick');let joyPid=null;function joyMove(e){e.preventDefault();let r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),max=r.width*.32,l=Math.hypot(dx,dy);if(l>max){dx=dx/l*max;dy=dy/l*max}input.x=dx/max;input.y=dy/max;stick.style.transform=`translate(${dx}px,${dy}px)`}joy.addEventListener('pointerdown',e=>{e.preventDefault();joyPid=e.pointerId;joy.setPointerCapture(e.pointerId);joyMove(e)});joy.addEventListener('pointermove',e=>{if(e.pointerId===joyPid)joyMove(e)},{passive:false});function joyEnd(e){if(e.pointerId===joyPid){joyPid=null;input.x=0;input.y=0;stick.style.transform='translate(0,0)'}}joy.addEventListener('pointerup',joyEnd);joy.addEventListener('pointercancel',joyEnd);
+document.addEventListener('selectstart',e=>e.preventDefault(),{capture:true});document.addEventListener('contextmenu',e=>e.preventDefault(),{capture:true});document.addEventListener('dragstart',e=>e.preventDefault(),{capture:true});document.addEventListener('touchstart',e=>{if(e.target.closest('.joy,.action,.topbtn,.playerPanel'))e.preventDefault()},{capture:true,passive:false});const joy=$('joy'),stick=$('stick');let joyPid=null;function joyMove(e){e.preventDefault();let r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),max=r.width*.32,l=Math.hypot(dx,dy);if(l>max){dx=dx/l*max;dy=dy/l*max}input.x=dx/max;input.y=dy/max;stick.style.transform=`translate(${dx}px,${dy}px)`}joy.addEventListener('pointerdown',e=>{e.preventDefault();joyPid=e.pointerId;joy.setPointerCapture(e.pointerId);joyMove(e)});joy.addEventListener('pointermove',e=>{if(e.pointerId===joyPid)joyMove(e)},{passive:false});function joyEnd(e){if(e.pointerId===joyPid){joyPid=null;input.x=0;input.y=0;stick.style.transform='translate(0,0)'}}joy.addEventListener('pointerup',joyEnd);joy.addEventListener('pointercancel',joyEnd);
 $('attack').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('dodge').addEventListener('pointerdown',e=>{e.preventDefault();dodge()});$('skill').addEventListener('pointerdown',e=>{e.preventDefault();skill()});$('interact').addEventListener('pointerdown',e=>{e.preventDefault();interact()});$('inventoryBtn').onclick=inventory;$('skillsBtn').onclick=skills;
 $('startBtn').onclick=()=>{if(load()){startGame(true)}else{$('creator').classList.add('show')}};function startGame(loaded){$('creator').classList.remove('show');$('start').style.display='none';if(!loaded)showStory('Голос у святилища','«Ты очнулся не случайно. Три печати удерживают Стража, а Страж знает твоё имя. Но печати — не замки. Это клятвы. И одна из них произнесена твоим голосом». Эйра ждёт у разбитого колокола.');running=true;last=performance.now();hud();requestAnimationFrame(loop)}$('createBtn').onclick=()=>{player=freshPlayer();player.name=$('charName').value.trim()||'Безымянный';player.class=$('charClass').value;player.look=$('charLook').value;player.origin=$('charOrigin').value;recalc();save();startGame(false)};
 $('continueBtn').onclick=()=>{$('ending').classList.remove('show');running=true;last=performance.now();requestAnimationFrame(loop)};
