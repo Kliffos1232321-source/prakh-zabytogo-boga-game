@@ -37,51 +37,53 @@
 @media(orientation:portrait) and (max-width:700px){#rotateHint{display:flex}}
 @media(orientation:landscape){.hud{padding:10px 14px}.joy{width:140px;height:140px}.stick{width:48px;height:48px;margin:-24px}.action{width:62px;height:62px}.action.attack{width:76px;height:76px}.actions{grid-template-columns:repeat(2,66px);gap:8px}.bottom{padding:0 46px max(18px,env(safe-area-inset-bottom))}}
 
-/* HUD redesign + iOS viewport stabilization */
+/* HUD placement based on the user's Miro layout. Button wording is preserved. */
 :root{--app-vw:100vw;--app-vh:100dvh;--app-vtop:0px;--app-vleft:0px}
 html,body{position:fixed;inset:0;width:100%;height:100%;height:var(--app-vh);overflow:hidden}
 #game,.hud,#start,#modal,#creator,#ending{position:fixed;left:var(--app-vleft);top:var(--app-vtop);width:var(--app-vw);height:var(--app-vh);inset:auto}
 #game{display:block;max-width:none;max-height:none;touch-action:none}
 .hud{padding:calc(env(safe-area-inset-top) + 10px) 14px calc(env(safe-area-inset-bottom) + 12px);pointer-events:none}
 .top{align-items:flex-start}
-.playerPanel{display:flex;align-items:center;gap:10px;max-width:min(58vw,390px);padding:8px 12px 8px 8px;background:var(--panel);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(8px);box-shadow:0 8px 30px #0005}
+.playerPanel{display:flex;align-items:center;gap:10px;max-width:min(48vw,360px);padding:8px 12px 8px 8px;background:var(--panel);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(8px);box-shadow:0 8px 30px #0005}
 .avatarMark{width:48px;height:48px;flex:0 0 48px;border:1px solid #d9e6f3aa;border-radius:50%;display:grid;place-items:center;color:#f4dfb7;font-weight:850;font-size:12px;background:radial-gradient(circle at 35% 25%,#657080,#222a36 72%)}
 .playerInfo{min-width:0}.playerInfo .brand{font-size:9px;letter-spacing:.1em}.playerInfo .name{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bars{width:clamp(130px,30vw,260px);margin-top:5px;gap:4px}.barline{font-size:10px;gap:5px}.bar{height:6px}.mana{background:linear-gradient(90deg,#6553ad,#b49bfa)}
+.bars{width:clamp(130px,27vw,245px);margin-top:5px;gap:4px}.barline{font-size:10px;gap:5px}.bar{height:6px}.mana{background:linear-gradient(90deg,#6553ad,#b49bfa)}
 .stats{display:none}
-.topbtn{top:12px;right:calc(min(184px,22vw) + 25px);padding:8px 9px;font-size:10px;min-height:34px;border-radius:9px;z-index:3}
-.topbtn.second{top:12px;right:calc(min(184px,22vw) + 98px)}
-#quest{top:auto;bottom:calc(env(safe-area-inset-bottom) + 112px);left:50%;transform:translateX(-50%);max-width:min(54vw,330px);padding:7px 10px;font-size:10px;opacity:.92}
+.topbtn{top:12px;right:calc(min(184px,22vw) + 22px);padding:9px 12px;font-size:12px;min-height:38px;border-radius:10px;z-index:3}
+.topbtn.second{top:12px;right:calc(min(184px,22vw) + 100px)}
+#quest{top:auto;bottom:calc(env(safe-area-inset-bottom) + 112px);left:50%;transform:translateX(-50%);max-width:min(48vw,310px);padding:7px 10px;font-size:10px;opacity:.92}
 #quest strong{font-size:11px}
-.bottom{padding:0 28px max(16px,env(safe-area-inset-bottom));}
+.bottom{padding:0 26px max(16px,env(safe-area-inset-bottom))}
 .controls{align-items:flex-end}
 .joy{width:clamp(112px,17vh,154px);height:clamp(112px,17vh,154px);flex:0 0 auto}
 .stick{width:46px;height:46px;margin:-23px}
-.actions{grid-template-columns:repeat(2,58px);gap:8px;align-items:center}
-.action{width:58px;height:58px;font-size:10px;touch-action:none;-webkit-user-select:none;user-select:none}
-.action.attack{width:72px;height:72px;font-size:12px}
-.action.skill{font-size:17px}
-button,.joy,.action,.topbtn{ -webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;-webkit-user-drag:none;touch-action:none}
+.actions{display:grid;grid-template-columns:repeat(2,68px);grid-template-rows:repeat(2,68px);gap:10px;align-items:center;justify-items:center}
+.action{width:68px;height:68px;font-size:11px;white-space:nowrap;padding:0}
+.action.attack{width:82px;height:82px;font-size:12px}
+.action.skill{font-size:11px}
+button,.joy,.action,.topbtn{-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;-webkit-user-drag:none;touch-action:none}
 @media(orientation:landscape){
  .hud{padding:calc(env(safe-area-inset-top) + 8px) 12px calc(env(safe-area-inset-bottom) + 10px)}
  .playerPanel{max-width:42vw}
  .bars{width:clamp(150px,26vw,270px)}
- .bottom{padding:0 30px max(12px,env(safe-area-inset-bottom))}
+ .bottom{padding:0 28px max(12px,env(safe-area-inset-bottom))}
  .joy{width:clamp(108px,21vh,150px);height:clamp(108px,21vh,150px)}
- .actions{grid-template-columns:repeat(2,58px)}
- .action{width:58px;height:58px}.action.attack{width:72px;height:72px}
+ .actions{grid-template-columns:repeat(2,66px);grid-template-rows:repeat(2,66px);gap:8px}
+ .action{width:66px;height:66px}.action.attack{width:78px;height:78px}
 }
 @media(max-width:700px) and (orientation:landscape){
  .playerPanel{padding:6px 9px 6px 6px;gap:7px}.avatarMark{width:40px;height:40px;flex-basis:40px}
  .playerInfo .brand{display:none}.playerInfo .name{font-size:12px}.bars{margin-top:2px;gap:3px;width:clamp(130px,28vw,220px)}
- .topbtn{right:calc(min(150px,22vw) + 22px);top:8px}.topbtn.second{right:calc(min(150px,22vw) + 88px);top:8px}
+ .topbtn{right:calc(min(150px,22vw) + 22px);top:8px}.topbtn.second{right:calc(min(150px,22vw) + 98px);top:8px}
+ .actions{grid-template-columns:repeat(2,58px);grid-template-rows:repeat(2,58px);gap:7px}
+ .action{width:58px;height:58px;font-size:10px}.action.attack{width:70px;height:70px}
 }
 @media(max-width:430px) and (orientation:portrait){
  .playerPanel{max-width:64vw}.avatarMark{width:40px;height:40px;flex-basis:40px}.bars{width:clamp(125px,38vw,180px)}
  .bottom{padding-left:14px;padding-right:14px}.joy{width:112px;height:112px}
- .actions{grid-template-columns:repeat(2,52px);gap:6px}.action{width:52px;height:52px}.action.attack{width:64px;height:64px}
+ .actions{grid-template-columns:repeat(2,54px);grid-template-rows:repeat(2,54px);gap:6px}
+ .action{width:54px;height:54px;font-size:9px}.action.attack{width:64px;height:64px;font-size:10px}
 }
-
 </style>
 </head>
 <body>
@@ -100,7 +102,7 @@ button,.joy,.action,.topbtn{ -webkit-user-select:none!important;user-select:none
   </div>
   <div class="panel stats"><div>⚔ <b id="damageText">15</b> урон</div><div>✦ <b id="shardText">0</b> осколков</div><div>☠ <b id="killText">0</b> повержено</div></div>
  </div>
- <div class="bottom"><div class="hint">Джойстик — движение<br>УДАР · РЫВОК · УМЕНИЕ</div><div class="controls"><div id="joy" class="joy"><div id="stick" class="stick"></div></div><div class="actions"><button id="attack" class="action attack">УД</button><button id="dodge" class="action dodge">Р</button><button id="interact" class="action">ДЕ</button><button id="skill" class="action skill">✦</button></div></div></div>
+ <div class="bottom"><div class="hint">Джойстик — движение<br>УДАР · РЫВОК · УМЕНИЕ</div><div class="controls"><div id="joy" class="joy"><div id="stick" class="stick"></div></div><div class="actions"><button id="attack" class="action attack">УДАР</button><button id="dodge" class="action dodge">РЫВОК</button><button id="interact" class="action">ДЕЙСТВИЕ</button><button id="skill" class="action skill">ВЗРЫВ</button></div></div></div>
 </div>
 <div id="quest"><strong>Глава I · Пепельный зов</strong><span id="questText">Найди три древних печати (0/3).</span></div>
 <button id="skillsBtn" class="topbtn">НАВЫКИ</button><button id="inventoryBtn" class="topbtn second">СУМКА</button>
