@@ -84,6 +84,40 @@ button,.joy,.action,.topbtn{-webkit-user-select:none!important;user-select:none!
  .actions{grid-template-columns:repeat(2,54px);grid-template-rows:repeat(2,54px);gap:6px}
  .action{width:54px;height:54px;font-size:9px}.action.attack{width:64px;height:64px;font-size:10px}
 }
+
+/* Start screen: keep the primary action safely inside the iPhone viewport */
+#start{
+ display:flex;align-items:center;justify-content:center;
+ overflow-y:auto;overflow-x:hidden;
+ padding:calc(env(safe-area-inset-top) + 20px) 24px calc(env(safe-area-inset-bottom) + 24px);
+ -webkit-overflow-scrolling:touch;
+}
+#start .intro{
+ width:min(440px,100%);
+ max-height:100%;
+ margin:auto;
+ padding:12px 0;
+ display:flex;flex-direction:column;align-items:center;
+}
+#start .intro p{max-width:42ch}
+#start #startBtn{
+ position:relative;z-index:12;
+ display:block;flex:0 0 auto;
+ width:min(100%,340px);min-height:54px;
+ margin:10px auto 8px;padding:15px 18px;
+ touch-action:manipulation;
+ pointer-events:auto;
+}
+@media(max-height:430px) and (orientation:landscape){
+ #start{align-items:flex-start;padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:calc(env(safe-area-inset-bottom) + 14px)}
+ #start .intro{max-height:none;padding:4px 0}
+ #start .sigil{font-size:28px}
+ #start .intro h1{font-size:clamp(24px,6vh,34px);margin:6px 0}
+ #start .intro p{font-size:11px;line-height:1.35;margin:6px 0}
+ #start .intro .small{font-size:9px;margin:7px 0}
+ #start #startBtn{min-height:48px;margin:7px auto;padding:12px 16px}
+}
+
 </style>
 </head>
 <body>
