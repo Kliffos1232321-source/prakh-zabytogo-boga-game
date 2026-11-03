@@ -101,12 +101,13 @@ button,.joy,.action,.topbtn{-webkit-user-select:none!important;user-select:none!
 }
 #start .intro p{max-width:42ch}
 #start #startBtn{
- position:relative;z-index:12;
+ position:relative;z-index:100;
  display:block;flex:0 0 auto;
  width:min(100%,340px);min-height:54px;
  margin:10px auto 8px;padding:15px 18px;
  touch-action:manipulation;
  pointer-events:auto;
+ cursor:pointer;
 }
 @media(max-height:430px) and (orientation:landscape){
  #start{align-items:flex-start;padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:calc(env(safe-area-inset-bottom) + 14px)}
@@ -258,7 +259,17 @@ function draw(){ctx.clearRect(0,0,W,H);let scale=Math.max(.68,Math.min(W/720,H/6
 function loop(t){if(!running)return;let dt=Math.min((t-last)/1000,.04)||0;last=t;update(dt);draw();requestAnimationFrame(loop)}
 document.addEventListener('selectstart',e=>e.preventDefault(),{capture:true});document.addEventListener('contextmenu',e=>e.preventDefault(),{capture:true});document.addEventListener('dragstart',e=>e.preventDefault(),{capture:true});document.addEventListener('touchstart',e=>{if(e.target.closest('.joy,.action,.topbtn,.playerPanel'))e.preventDefault()},{capture:true,passive:false});const joy=$('joy'),stick=$('stick');let joyPid=null;function joyMove(e){e.preventDefault();let r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),max=r.width*.32,l=Math.hypot(dx,dy);if(l>max){dx=dx/l*max;dy=dy/l*max}input.x=dx/max;input.y=dy/max;stick.style.transform=`translate(${dx}px,${dy}px)`}joy.addEventListener('pointerdown',e=>{e.preventDefault();joyPid=e.pointerId;joy.setPointerCapture(e.pointerId);joyMove(e)});joy.addEventListener('pointermove',e=>{if(e.pointerId===joyPid)joyMove(e)},{passive:false});function joyEnd(e){if(e.pointerId===joyPid){joyPid=null;input.x=0;input.y=0;stick.style.transform='translate(0,0)'}}joy.addEventListener('pointerup',joyEnd);joy.addEventListener('pointercancel',joyEnd);
 $('attack').addEventListener('pointerdown',e=>{e.preventDefault();attack()});$('dodge').addEventListener('pointerdown',e=>{e.preventDefault();dodge()});$('skill').addEventListener('pointerdown',e=>{e.preventDefault();skill()});$('interact').addEventListener('pointerdown',e=>{e.preventDefault();interact()});$('inventoryBtn').onclick=inventory;$('skillsBtn').onclick=skills;
-$('startBtn').onclick=()=>{if(load()){startGame(true)}else{$('creator').classList.add('show')}};function startGame(loaded){$('creator').classList.remove('show');$('start').style.display='none';if(!loaded)showStory('Голос у святилища','«Ты очнулся не случайно. Три печати удерживают Стража, а Страж знает твоё имя. Но печати — не замки. Это клятвы. И одна из них произнесена твоим голосом». Эйра ждёт у разбитого колокола.');running=true;last=performance.now();hud();requestAnimationFrame(loop)}$('createBtn').onclick=()=>{player=freshPlayer();player.name=$('charName').value.trim()||'Безымянный';player.class=$('charClass').value;player.look=$('charLook').value;player.origin=$('charOrigin').value;recalc();save();startGame(false)};
+const startButton=$('startBtn');
+let startLast=0;
+function beginFromTitle(){
+ const now=Date.now();
+ if(now-startLast<500)return;
+ startLast=now;
+ if(load()){startGame(true)}else{$('creator').classList.add('show')}
+}
+startButton.type='button';
+startButton.addEventListener('pointerup',e=>{e.preventDefault();beginFromTitle()});
+startButton.addEventListener('click',e=>{e.preventDefault();beginFromTitle()});function startGame(loaded){$('creator').classList.remove('show');$('start').style.display='none';if(!loaded)showStory('Голос у святилища','«Ты очнулся не случайно. Три печати удерживают Стража, а Страж знает твоё имя. Но печати — не замки. Это клятвы. И одна из них произнесена твоим голосом». Эйра ждёт у разбитого колокола.');running=true;last=performance.now();hud();requestAnimationFrame(loop)}$('createBtn').onclick=()=>{player=freshPlayer();player.name=$('charName').value.trim()||'Безымянный';player.class=$('charClass').value;player.look=$('charLook').value;player.origin=$('charOrigin').value;recalc();save();startGame(false)};
 $('continueBtn').onclick=()=>{$('ending').classList.remove('show');running=true;last=performance.now();requestAnimationFrame(loop)};
 addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();attack()}if(e.key==='Shift')dodge()});addEventListener('keyup',e=>keys[e.key]=false);
 addEventListener('pagehide',save);hud();draw();
